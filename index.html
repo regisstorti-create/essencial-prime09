@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Essencial Prime</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Cormorant+Garamond:wght@700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --rosa: #00897b;
+    --rosa-claro: #e0f2f1;
+    --rosa-escuro: #1a1a1a;
+    --lilas: #00695c;
+    --lilas-claro: #e0f2f1;
+    --verde: #2e7d32;
+    --verde-claro: #e8f5e9;
+    --amarelo: #f57f17;
+    --amarelo-claro: #fff8e1;
+    --vermelho: #c62828;
+    --vermelho-claro: #ffebee;
+    --azul: #00796b;
+    --azul-claro: #e0f2f1;
+    --cinza: #546e7a;
+    --cinza-claro: #f5f5f5;
+    --branco: #ffffff;
+    --sombra: 0 4px 20px rgba(0,137,123,0.13);
+    --sombra2: 0 2px 8px rgba(0,0,0,0.10);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Nunito', sans-serif; background: #f0faf9; color: #2d2d2d; min-height: 100vh; }
+
+  /* NAV */
+  .nav { background: linear-gradient(135deg, #1a1a1a, #00695c); padding: 0; display: flex; align-items: stretch; box-shadow: 0 4px 20px rgba(0,0,0,0.35); position: sticky; top: 0; z-index: 100; flex-wrap: wrap; }
+  .nav-brand { color: white; font-family: 'Cormorant Garamond', 'Playfair Display', serif; letter-spacing: 1px; font-size: 1.2rem; padding: 14px 20px; white-space: nowrap; }
+  .nav-tabs { display: flex; flex-wrap: wrap; }
+  .nav-tab { color: rgba(255,255,255,0.75); padding: 14px 14px; cursor: pointer; font-weight: 700; font-size: 0.78rem; border-bottom: 3px solid transparent; transition: all 0.2s; white-space: nowrap; letter-spacing: 0.3px; }
+  .nav-tab:hover { color: white; background: rgba(255,255,255,0.1); }
+  .nav-tab.active { color: white; border-bottom-color: #fff; background: rgba(255,255,255,0.15); }
+
+  /* PAGES */
+  .page { display: none; padding: 24px 20px; max-width: 1100px; margin: 0 auto; }
+  .page.active { display: block; }
+
+  /* CARDS */
+  .card { background: white; border-radius: var(--radius); box-shadow: var(--sombra); padding: 22px; margin-bottom: 20px; }
+  .card-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--rosa-escuro); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+
+  /* DASHBOARD GRID */
+  .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 20px; }
+  .stat-card { background: white; border-radius: var(--radius); padding: 18px 16px; box-shadow: var(--sombra2); border-left: 5px solid #00897b; }
+  .stat-card.verde { border-left-color: var(--verde); }
+  .stat-card.amarelo { border-left-color: var(--amarelo); }
+  .stat-card.vermelho { border-left-color: var(--vermelho); }
+  .stat-card.lilas { border-left-color: var(--lilas); }
+  .stat-label { font-size: 0.72rem; font-weight: 700; color: var(--cinza); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .stat-value { font-size: 1.5rem; font-weight: 900; color: #1a1a1a; }
+  .stat-sub { font-size: 0.72rem; color: var(--cinza); margin-top: 3px; }
+
+  /* ALERTAS */
+  .alertas { display: flex; flex-direction: column; gap: 10px; }
+  .alerta { border-radius: var(--radius-sm); padding: 12px 16px; display: flex; align-items: center; gap: 12px; font-size: 0.88rem; font-weight: 600; }
+  .alerta.verm { background: var(--vermelho-claro); border-left: 4px solid var(--vermelho); color: var(--vermelho); }
+  .alerta.amar { background: var(--amarelo-claro); border-left: 4px solid var(--amarelo); color: #7a4f00; }
+  .alerta.verd { background: var(--verde-claro); border-left: 4px solid var(--verde); color: var(--verde); }
+  .alerta.azul { background: var(--azul-claro); border-left: 4px solid var(--azul); color: var(--azul); }
+  .alerta-icon { font-size: 1.2rem; }
+  .alerta-info { flex: 1; }
+  .alerta-cliente { font-weight: 800; }
+  .alerta-detalhe { font-weight: 400; opacity: 0.85; }
+  .sem-alerta { color: var(--cinza); font-size: 0.88rem; text-align: center; padding: 16px; }
+
+  /* BOTÕES */
+  .btn { border: none; border-radius: var(--radius-sm); cursor: pointer; font-family: 'Nunito', sans-serif; font-weight: 700; transition: all 0.18s; }
+  .btn-rosa { background: linear-gradient(135deg, #00897b, #1a1a1a); color: white; padding: 10px 20px; font-size: 0.88rem; box-shadow: 0 3px 12px rgba(0,137,123,0.3); }
+  .btn-rosa:hover { transform: translateY(-1px); box-shadow: 0 5px 18px rgba(0,137,123,0.4); }
+  .btn-outline { background: transparent; border: 2px solid var(--rosa); color: var(--rosa); padding: 8px 16px; font-size: 0.82rem; }
+  .btn-outline:hover { background: var(--rosa-claro); }
+  .btn-sm { padding: 6px 12px; font-size: 0.78rem; border-radius: 8px; }
+  .btn-danger { background: var(--vermelho-claro); color: var(--vermelho); border: none; padding: 6px 12px; font-size: 0.78rem; border-radius: 8px; font-weight: 700; cursor: pointer; }
+  .btn-verde { background: var(--verde-claro); color: var(--verde); border: none; padding: 6px 12px; font-size: 0.78rem; border-radius: 8px; font-weight: 700; cursor: pointer; }
+
+  /* FORMULÁRIOS */
+  .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-group label { font-size: 0.78rem; font-weight: 700; color: var(--cinza); text-transform: uppercase; letter-spacing: 0.4px; }
+  .form-group input, .form-group select, .form-group textarea {
+    border: 2px solid #e8d5f0; border-radius: var(--radius-sm); padding: 10px 12px;
+    font-family: 'Nunito', sans-serif; font-size: 0.9rem; color: #2d2d2d;
+    transition: border-color 0.2s; background: #fafafa;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    outline: none; border-color: var(--rosa); background: white;
+  }
+  .form-actions { margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; }
+
+  /* TABELA */
+  .tabela-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th { background: linear-gradient(135deg, #1a1a1a, #00695c); color: white; padding: 10px 12px; text-align: left; font-weight: 700; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.4px; }
+  td { padding: 10px 12px; border-bottom: 1px solid #f0e4f7; vertical-align: middle; }
+  tr:hover td { background: var(--rosa-claro); }
+  tr:last-child td { border-bottom: none; }
+
+  /* BADGES */
+  .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 800; display: inline-block; }
+  .badge-pago { background: var(--verde-claro); color: var(--verde); }
+  .badge-aberto { background: var(--amarelo-claro); color: #7a4f00; }
+  .badge-atrasado { background: var(--vermelho-claro); color: var(--vermelho); }
+  .badge-avencer { background: var(--azul-claro); color: var(--azul); }
+  .badge-fiado { background: var(--lilas-claro); color: var(--lilas); }
+  .badge-vista { background: var(--verde-claro); color: var(--verde); }
+
+  /* MODAL */
+  .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 999; align-items: center; justify-content: center; padding: 16px; }
+  .modal-bg.open { display: flex; }
+  .modal { background: white; border-radius: var(--radius); padding: 26px; width: 100%; max-width: 640px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.25); }
+  .modal-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--rosa-escuro); margin-bottom: 18px; }
+  .modal-close { float: right; background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--cinza); margin-top: -4px; }
+
+  /* VENDA - itens */
+  .itens-venda { border: 2px dashed #e8d5f0; border-radius: var(--radius-sm); padding: 14px; margin-top: 14px; }
+  .item-venda-row { display: grid; grid-template-columns: 1fr 80px 90px auto; gap: 8px; align-items: end; margin-bottom: 10px; }
+  .item-venda-row:last-child { margin-bottom: 0; }
+  .parcelas-box { background: var(--lilas-claro); border-radius: var(--radius-sm); padding: 14px; margin-top: 10px; }
+  .parcela-row { display: grid; grid-template-columns: 80px 1fr; gap: 8px; margin-bottom: 8px; align-items: center; font-size: 0.85rem; }
+
+  /* ESTOQUE baixo */
+  .estoque-baixo { background: var(--vermelho-claro); color: var(--vermelho); font-weight: 700; border-radius: 6px; padding: 2px 7px; font-size: 0.78rem; }
+
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+  .section-header h2 { font-family: 'Playfair Display', serif; font-size: 1.25rem; color: var(--rosa-escuro); }
+
+  .vazio { text-align: center; color: var(--cinza); padding: 30px; font-size: 0.9rem; }
+
+  .dash-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media(max-width: 650px) { .dash-2col { grid-template-columns: 1fr; } .item-venda-row { grid-template-columns: 1fr 70px; } }
+  
+  .tag-marca { background: var(--lilas-claro); color: var(--lilas); border-radius: 6px; padding: 2px 8px; font-size: 0.75rem; font-weight: 700; }
+  .pedido-status { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 800; }
+  .pedido-pendente { background: var(--amarelo-claro); color: #7a4f00; }
+  .pedido-pago { background: var(--verde-claro); color: var(--verde); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">✨ Essencial Prime</div>
+  <div class="nav-tabs">
+    <div class="nav-tab active" onclick="showPage('dashboard')">🏠 Dashboard</div>
+    <div class="nav-tab" onclick="showPage('estoque')">📦 Estoque</div>
+    <div class="nav-tab" onclick="showPage('clientes')">👥 Clientes</div>
+    <div class="nav-tab" onclick="showPage('vendas')">🛍️ Vendas</div>
+    <div class="nav-tab" onclick="showPage('boletos')">💳 Boletos</div>
+    <div class="nav-tab" onclick="showPage('pedidos')">📋 Pedidos</div>
+  </div>
+</nav>
+
+<!-- ═══════════════ DASHBOARD ═══════════════ -->
+<div id="page-dashboard" class="page active">
+  <div class="dash-grid" id="dash-stats"></div>
+  <div class="dash-2col">
+    <div class="card">
+      <div class="card-title">⏰ Alertas de Cobrança</div>
+      <div class="alertas" id="dash-alertas-vendas"><div class="sem-alerta">Sem cobranças próximas 🎉</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">💳 Alertas de Boletos</div>
+      <div class="alertas" id="dash-alertas-boletos"><div class="sem-alerta">Sem boletos próximos 🎉</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">📦 Estoque Baixo (menos de 3 unidades)</div>
+    <div id="dash-estoque-baixo"><div class="sem-alerta">Estoque OK 👍</div></div>
+  </div>
+</div>
+
+<!-- ═══════════════ ESTOQUE ═══════════════ -->
+<div id="page-estoque" class="page">
+  <div class="section-header">
+    <h2>📦 Estoque de Produtos</h2>
+    <button class="btn btn-rosa" onclick="abrirModalProduto()">+ Novo Produto</button>
+  </div>
+  <div class="card" style="padding:14px 16px; margin-bottom:14px;">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+      <input id="filtro-marca" placeholder="Filtrar por marca..." style="border:2px solid #e8d5f0;border-radius:8px;padding:8px 12px;font-family:Nunito;font-size:0.88rem;flex:1;min-width:140px;" oninput="renderEstoque()"/>
+      <input id="filtro-cat" placeholder="Filtrar por categoria..." style="border:2px solid #e8d5f0;border-radius:8px;padding:8px 12px;font-family:Nunito;font-size:0.88rem;flex:1;min-width:140px;" oninput="renderEstoque()"/>
+    </div>
+  </div>
+  <div class="card">
+    <div class="tabela-wrap"><table id="tabela-estoque">
+      <thead><tr><th>Produto</th><th>Marca</th><th>Categoria</th><th>Compra</th><th>Venda</th><th>Margem</th><th>Qtd</th><th>Ações</th></tr></thead>
+      <tbody id="tbody-estoque"></tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- ═══════════════ CLIENTES ═══════════════ -->
+<div id="page-clientes" class="page">
+  <div class="section-header">
+    <h2>👥 Clientes</h2>
+    <button class="btn btn-rosa" onclick="abrirModalCliente()">+ Novo Cliente</button>
+  </div>
+  <div id="lista-clientes"></div>
+</div>
+
+<!-- ═══════════════ VENDAS ═══════════════ -->
+<div id="page-vendas" class="page">
+  <div class="section-header">
+    <h2>🛍️ Vendas</h2>
+    <button class="btn btn-rosa" onclick="abrirModalVenda()">+ Nova Venda</button>
+  </div>
+  <div class="card">
+    <div class="tabela-wrap"><table>
+      <thead><tr><th>Data</th><th>Cliente</th><th>Produtos</th><th>Total</th><th>Pagamento</th><th>Status</th><th>Ações</th></tr></thead>
+      <tbody id="tbody-vendas"></tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- ═══════════════ BOLETOS ═══════════════ -->
+<div id="page-boletos" class="page">
+  <div class="section-header">
+    <h2>💳 Boletos / Contas a Pagar</h2>
+    <button class="btn btn-rosa" onclick="abrirModalBoleto()">+ Novo Boleto</button>
+  </div>
+  <div class="card">
+    <div class="tabela-wrap"><table>
+      <thead><tr><th>Fornecedor</th><th>Valor Total</th><th>Parcelas</th><th>Val. Parcela</th><th>Vencimento</th><th>Status</th><th>Ações</th></tr></thead>
+      <tbody id="tbody-boletos"></tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- ═══════════════ PEDIDOS ═══════════════ -->
+<div id="page-pedidos" class="page">
+  <div class="section-header">
+    <h2>📋 Pedidos aos Fornecedores</h2>
+    <button class="btn btn-rosa" onclick="abrirModalPedido()">+ Novo Pedido</button>
+  </div>
+  <div class="card">
+    <div class="tabela-wrap"><table>
+      <thead><tr><th>Nº Pedido</th><th>Fornecedor</th><th>Cliente</th><th>Data</th><th>Valor Total</th><th>Parcelas</th><th>Val. Parcela</th><th>Status</th><th>Ações</th></tr></thead>
+      <tbody id="tbody-pedidos"></tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- ═══════════════ MODAIS ═══════════════ -->
+
+<!-- Modal Produto -->
+<div class="modal-bg" id="modal-produto">
+  <div class="modal">
+    <button class="modal-close" onclick="fecharModal('modal-produto')">×</button>
+    <div class="modal-title">📦 Cadastrar Produto</div>
+    <div class="form-grid">
+      <div class="form-group" style="grid-column:1/-1"><label>Nome do Produto *</label><input id="p-nome" placeholder="Ex: Creme Hidratante Anti Stress"/></div>
+      <div class="form-group"><label>Marca *</label><input id="p-marca" placeholder="Ex: Natura"/></div>
+      <div class="form-group"><label>Categoria</label><input id="p-cat" placeholder="Ex: Cuidados com a Pele"/></div>
+      <div class="form-group"><label>Subcategoria</label><input id="p-subcat" placeholder="Ex: Creme"/></div>
+      <div class="form-group"><label>Preço de Compra (R$) *</label><input id="p-compra" type="number" step="0.01" placeholder="0,00"/></div>
+      <div class="form-group"><label>Preço de Venda (R$) *</label><input id="p-venda" type="number" step="0.01" placeholder="0,00" oninput="calcMargem()"/></div>
+      <div class="form-group"><label>Margem de Lucro</label><input id="p-margem" readonly placeholder="Calculado automaticamente" style="background:#f0f0f0;"/></div>
+      <div class="form-group"><label>Quantidade em Estoque</label><input id="p-qtd" type="number" placeholder="0"/></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-rosa" onclick="salvarProduto()">Salvar Produto</button>
+      <button class="btn btn-outline" onclick="fecharModal('modal-produto')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Cliente -->
+<div class="modal-bg" id="modal-cliente">
+  <div class="modal">
+    <button class="modal-close" onclick="fecharModal('modal-cliente')">×</button>
+    <div class="modal-title">👤 Cadastrar Cliente</div>
+    <div class="form-grid">
+      <div class="form-group" style="grid-column:1/-1"><label>Nome Completo *</label><input id="c-nome" placeholder="Nome completo do cliente"/></div>
+      <div class="form-group"><label>Telefone / WhatsApp</label><input id="c-tel" placeholder="(00) 00000-0000"/></div>
+      <div class="form-group" style="grid-column:1/-1"><label>Observação</label><textarea id="c-obs" rows="2" placeholder="Anotações sobre o cliente..."></textarea></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-rosa" onclick="salvarCliente()">Salvar Cliente</button>
+      <button class="btn btn-outline" onclick="fecharModal('modal-cliente')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Venda -->
+<div class="modal-bg" id="modal-venda">
+  <div class="modal">
+    <button class="modal-close" onclick="fecharModal('modal-venda')">×</button>
+    <div class="modal-title">🛍️ Nova Venda</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Cliente *</label>
+        <select id="v-cliente"><option value="">Selecione o cliente...</option></select>
+      </div>
+      <div class="form-group">
+        <label>Data da Venda *</label>
+        <input id="v-data" type="date"/>
+      </div>
+      <div class="form-group">
+        <label>Forma de Pagamento *</label>
+        <select id="v-pagamento" onchange="toggleFiado()">
+          <option value="">Selecione...</option>
+          <option value="dinheiro">💵 Dinheiro</option>
+          <option value="pix">📱 Pix</option>
+          <option value="cartao">💳 Cartão</option>
+          <option value="fiado">🤝 Fiado</option>
+        </select>
+      </div>
+    </div>
+    <div class="itens-venda">
+      <div style="font-weight:700;color:var(--rosa-escuro);margin-bottom:10px;font-size:0.9rem;">🛒 Produtos da Venda</div>
+      <div id="itens-container"></div>
+      <button class="btn btn-outline btn-sm" onclick="addItemVenda()" style="margin-top:8px;">+ Adicionar Produto</button>
+      <div style="margin-top:12px;text-align:right;font-weight:800;font-size:1.05rem;color:var(--rosa-escuro);">
+        Total: R$ <span id="v-total-display">0,00</span>
+      </div>
+    </div>
+    <div id="fiado-box" class="parcelas-box" style="display:none;margin-top:14px;">
+      <div style="font-weight:700;color:var(--lilas);margin-bottom:10px;">🤝 Configurar Fiado</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Número de Parcelas</label>
+          <input id="v-parcelas" type="number" min="1" max="24" value="1" oninput="gerarParcelasDatas()"/>
+        </div>
+        <div class="form-group">
+          <label>Dia do Vencimento</label>
+          <input id="v-dia-venc" type="number" min="1" max="31" value="10" oninput="gerarParcelasDatas()"/>
+        </div>
+      </div>
+      <div id="parcelas-datas" style="margin-top:10px;"></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-rosa" onclick="salvarVenda()">Registrar Venda</button>
+      <button class="btn btn-outline" onclick="fecharModal('modal-venda')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Parcelas da Venda (ver) -->
+<div class="modal-bg" id="modal-parcelas-venda">
+  <div class="modal">
+    <button class="modal-close" onclick="fecharModal('modal-parcelas-venda')">×</button>
+    <div class="modal-title" id="mp-titulo">Parcelas</div>
+    <div id="mp-conteudo"></div>
+  </div>
+</div>
+
+<!-- Modal Boleto -->
+<div class="modal-bg" id="modal-boleto">
+  <div class="modal">
+    <button class="modal-close" onclick="fecharModal('modal-boleto')">×</button>
+    <div class="modal-title">💳 Novo Boleto</div>
+    <div class="form-grid">
+      <div class="form-group"><label>Fornecedor *</label><input id="b-forn" placeholder="Ex: Natura, Boticário..."/></div>
+      <div class="form-group"><label>Valor Total (R$) *</label><input id="b-total" type="number" step="0.01" placeholder="0,00" oninput="calcBoleto()"/></div>
+      <div class="form-group"><label>Nº de Parcelas</label><input id="b-parc" type="number" min="1" value="1" oninput="calcBoleto()"/></div>
+      <div class="form-group"><label>Valor da Parcela</label><input id="b-vparc" readonly style="background:#f0f0f0;" placeholder="Calculado automaticamente"/></div>
+      <div class="form-group"><label>Vencimento (1ª parcela) *</label><input id="b-venc" type="date"/></div>
+      <div class="form-group"><label>Observação</label><input id="b-obs" placeholder="Opcional"/></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-rosa" onclick="salvarBoleto()">Salvar Boleto</button>
+      <button class="btn btn-outline" onclick="fecharModal('modal-boleto')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Pedido -->
+<div class="modal-bg" id="modal-pedido">
+  <div class="modal">
+    <button class="modal-close" onclick="fecharModal('modal-pedido')">×</button>
+    <div class="modal-title">📋 Novo Pedido</div>
+    <div class="form-grid">
+      <div class="form-group"><label>Nº do Pedido</label><input id="ped-num" placeholder="Ex: 001"/></div>
+      <div class="form-group"><label>Fornecedor *</label><input id="ped-forn" placeholder="Ex: Natura"/></div>
+      <div class="form-group">
+        <label>Cliente (quem pediu)</label>
+        <select id="ped-cliente"><option value="">Nenhum / Pedido próprio</option></select>
+      </div>
+      <div class="form-group"><label>Data do Pedido</label><input id="ped-data" type="date"/></div>
+      <div class="form-group"><label>Valor Total (R$) *</label><input id="ped-total" type="number" step="0.01" placeholder="0,00" oninput="calcPedido()"/></div>
+      <div class="form-group"><label>Nº de Parcelas</label><input id="ped-parc" type="number" min="1" value="1" oninput="calcPedido()"/></div>
+      <div class="form-group"><label>Valor da Parcela</label><input id="ped-vparc" readonly style="background:#f0f0f0;"/></div>
+      <div class="form-group" style="grid-column:1/-1"><label>Produtos / Observação</label><textarea id="ped-obs" rows="2" placeholder="Descreva os produtos pedidos..."></textarea></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-rosa" onclick="salvarPedido()">Salvar Pedido</button>
+      <button class="btn btn-outline" onclick="fecharModal('modal-pedido')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── STORAGE ──────────────────────────────────────────────────────────────────
+const DB = {
+  get: (k) => JSON.parse(localStorage.getItem(k) || '[]'),
+  set: (k, v) => localStorage.setItem(k, JSON.stringify(v)),
+};
+const hoje = () => new Date().toISOString().split('T')[0];
+const fmt = (v) => Number(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const diffDias = (dataStr) => {
+  const d = new Date(dataStr + 'T12:00:00');
+  const h = new Date(); h.setHours(12,0,0,0);
+  return Math.round((d - h) / 86400000);
+};
+
+// ── NAV ──────────────────────────────────────────────────────────────────────
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  event.target.classList.add('active');
+  if (id === 'dashboard') renderDashboard();
+  if (id === 'estoque') renderEstoque();
+  if (id === 'clientes') renderClientes();
+  if (id === 'vendas') renderVendas();
+  if (id === 'boletos') renderBoletos();
+  if (id === 'pedidos') renderPedidos();
+}
+function fecharModal(id) { document.getElementById(id).classList.remove('open'); }
+function abrirModal(id) { document.getElementById(id).classList.add('open'); }
+
+// ── PRODUTOS ─────────────────────────────────────────────────────────────────
+function abrirModalProduto(idx) {
+  ['p-nome','p-marca','p-cat','p-subcat','p-compra','p-venda','p-margem','p-qtd'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('modal-produto').dataset.editIdx = idx !== undefined ? idx : '';
+  if (idx !== undefined) {
+    const p = DB.get('produtos')[idx];
+    document.getElementById('p-nome').value = p.nome;
+    document.getElementById('p-marca').value = p.marca;
+    document.getElementById('p-cat').value = p.categoria||'';
+    document.getElementById('p-subcat').value = p.subcategoria||'';
+    document.getElementById('p-compra').value = p.precoCompra;
+    document.getElementById('p-venda').value = p.precoVenda;
+    document.getElementById('p-margem').value = p.margem+'%';
+    document.getElementById('p-qtd').value = p.quantidade;
+  }
+  abrirModal('modal-produto');
+}
+function calcMargem() {
+  const c = parseFloat(document.getElementById('p-compra').value)||0;
+  const v = parseFloat(document.getElementById('p-venda').value)||0;
+  if (c > 0 && v > 0) {
+    const m = ((v - c) / c * 100).toFixed(1);
+    document.getElementById('p-margem').value = m + '%';
+  }
+}
+function salvarProduto() {
+  const nome = document.getElementById('p-nome').value.trim();
+  const marca = document.getElementById('p-marca').value.trim();
+  const compra = parseFloat(document.getElementById('p-compra').value)||0;
+  const venda = parseFloat(document.getElementById('p-venda').value)||0;
+  if (!nome || !marca || !compra || !venda) { alert('Preencha Nome, Marca, Preço de Compra e Preço de Venda!'); return; }
+  const margem = compra > 0 ? ((venda - compra) / compra * 100).toFixed(1) : 0;
+  const prod = { nome, marca, categoria: document.getElementById('p-cat').value.trim(), subcategoria: document.getElementById('p-subcat').value.trim(), precoCompra: compra, precoVenda: venda, margem, quantidade: parseInt(document.getElementById('p-qtd').value)||0 };
+  const lista = DB.get('produtos');
+  const editIdx = document.getElementById('modal-produto').dataset.editIdx;
+  if (editIdx !== '') lista[parseInt(editIdx)] = prod; else lista.push(prod);
+  DB.set('produtos', lista);
+  fecharModal('modal-produto');
+  renderEstoque();
+}
+function excluirProduto(idx) {
+  if (!confirm('Excluir produto?')) return;
+  const lista = DB.get('produtos'); lista.splice(idx, 1); DB.set('produtos', lista); renderEstoque();
+}
+function renderEstoque() {
+  const lista = DB.get('produtos');
+  const fm = (document.getElementById('filtro-marca')||{}).value?.toLowerCase()||'';
+  const fc = (document.getElementById('filtro-cat')||{}).value?.toLowerCase()||'';
+  const filtrada = lista.filter(p => (!fm || p.marca.toLowerCase().includes(fm)) && (!fc || (p.categoria||'').toLowerCase().includes(fc)));
+  const tbody = document.getElementById('tbody-estoque');
+  if (!filtrada.length) { tbody.innerHTML = '<tr><td colspan="8" class="vazio">Nenhum produto cadastrado ainda.</td></tr>'; return; }
+  tbody.innerHTML = filtrada.map((p, i) => {
+    const realIdx = lista.indexOf(p);
+    const qtdHtml = p.quantidade < 3 ? `<span class="estoque-baixo">⚠️ ${p.quantidade}</span>` : `<b>${p.quantidade}</b>`;
+    return `<tr>
+      <td><b>${p.nome}</b>${p.subcategoria ? `<br><small style="color:var(--cinza)">${p.subcategoria}</small>` : ''}</td>
+      <td><span class="tag-marca">${p.marca}</span></td>
+      <td>${p.categoria||'-'}</td>
+      <td>R$ ${fmt(p.precoCompra)}</td>
+      <td><b>R$ ${fmt(p.precoVenda)}</b></td>
+      <td style="color:var(--verde);font-weight:700">${p.margem}%</td>
+      <td>${qtdHtml}</td>
+      <td style="white-space:nowrap"><button class="btn-verde btn-sm btn" onclick="abrirModalProduto(${realIdx})">✏️</button> <button class="btn-danger btn-sm btn" onclick="excluirProduto(${realIdx})">🗑️</button></td>
+    </tr>`;
+  }).join('');
+}
+
+// ── CLIENTES ─────────────────────────────────────────────────────────────────
+function abrirModalCliente(idx) {
+  ['c-nome','c-tel','c-obs'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('modal-cliente').dataset.editIdx = idx !== undefined ? idx : '';
+  if (idx !== undefined) {
+    const c = DB.get('clientes')[idx];
+    document.getElementById('c-nome').value = c.nome;
+    document.getElementById('c-tel').value = c.telefone||'';
+    document.getElementById('c-obs').value = c.obs||'';
+  }
+  abrirModal('modal-cliente');
+}
+function salvarCliente() {
+  const nome = document.getElementById('c-nome').value.trim();
+  if (!nome) { alert('Digite o nome do cliente!'); return; }
+  const cli = { nome, telefone: document.getElementById('c-tel').value.trim(), obs: document.getElementById('c-obs').value.trim() };
+  const lista = DB.get('clientes');
+  const editIdx = document.getElementById('modal-cliente').dataset.editIdx;
+  if (editIdx !== '') lista[parseInt(editIdx)] = cli; else lista.push(cli);
+  DB.set('clientes', lista);
+  fecharModal('modal-cliente');
+  renderClientes();
+}
+function excluirCliente(idx) {
+  if (!confirm('Excluir cliente?')) return;
+  const lista = DB.get('clientes'); lista.splice(idx, 1); DB.set('clientes', lista); renderClientes();
+}
+function renderClientes() {
+  const clientes = DB.get('clientes');
+  const vendas = DB.get('vendas');
+  const container = document.getElementById('lista-clientes');
+  if (!clientes.length) { container.innerHTML = '<div class="card vazio">Nenhum cliente cadastrado ainda.</div>'; return; }
+  container.innerHTML = clientes.map((c, i) => {
+    const vendasCli = vendas.filter(v => v.clienteNome === c.nome);
+    const emAberto = vendasCli.filter(v => v.pagamento === 'fiado' && v.parcelas && v.parcelas.some(p => !p.pago));
+    const totalDevendo = emAberto.reduce((sum, v) => sum + v.parcelas.filter(p => !p.pago).reduce((s, p) => s + p.valor, 0), 0);
+    return `<div class="card" style="margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;">
+        <div>
+          <div style="font-weight:800;font-size:1rem">${c.nome}</div>
+          ${c.telefone ? `<div style="color:var(--cinza);font-size:0.85rem">📱 ${c.telefone}</div>` : ''}
+          ${c.obs ? `<div style="color:var(--cinza);font-size:0.82rem;margin-top:4px">📝 ${c.obs}</div>` : ''}
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          ${totalDevendo > 0 ? `<span class="badge badge-fiado">Deve R$ ${fmt(totalDevendo)}</span>` : '<span class="badge badge-pago">Em dia ✅</span>'}
+          <button class="btn-verde btn-sm btn" onclick="abrirModalCliente(${i})">✏️</button>
+          <button class="btn-danger btn-sm btn" onclick="excluirCliente(${i})">🗑️</button>
+        </div>
+      </div>
+      ${emAberto.length ? `<div style="margin-top:10px;font-size:0.82rem;color:var(--amarelo);font-weight:700">⏳ ${emAberto.length} venda(s) com parcela em aberto</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+// ── VENDAS ───────────────────────────────────────────────────────────────────
+let itensVenda = [];
+function abrirModalVenda() {
+  itensVenda = [];
+  document.getElementById('v-cliente').innerHTML = '<option value="">Selecione o cliente...</option>';
+  DB.get('clientes').forEach(c => {
+    const o = document.createElement('option'); o.value = c.nome; o.textContent = c.nome;
+    document.getElementById('v-cliente').appendChild(o);
+  });
+  document.getElementById('v-data').value = hoje();
+  document.getElementById('v-pagamento').value = '';
+  document.getElementById('fiado-box').style.display = 'none';
+  document.getElementById('v-parcelas').value = 1;
+  document.getElementById('v-dia-venc').value = 10;
+  document.getElementById('parcelas-datas').innerHTML = '';
+  renderItensVenda();
+  addItemVenda();
+  abrirModal('modal-venda');
+}
+function addItemVenda() {
+  itensVenda.push({ produtoNome: '', quantidade: 1, precoUnitario: 0 });
+  renderItensVenda();
+}
+function renderItensVenda() {
+  const produtos = DB.get('produtos');
+  const c = document.getElementById('itens-container');
+  c.innerHTML = itensVenda.map((item, i) => `
+    <div class="item-venda-row">
+      <div class="form-group" style="margin:0">
+        <label style="font-size:0.72rem;color:var(--cinza);">Produto</label>
+        <select onchange="selecionarProdutoVenda(${i}, this.value)" style="border:2px solid #e8d5f0;border-radius:8px;padding:8px;font-family:Nunito;font-size:0.85rem;">
+          <option value="">Selecione...</option>
+          ${produtos.map(p => `<option value="${p.nome}" ${p.nome === item.produtoNome ? 'selected' : ''}>${p.nome} (${p.marca})</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group" style="margin:0">
+        <label style="font-size:0.72rem;color:var(--cinza);">Qtd</label>
+        <input type="number" min="1" value="${item.quantidade}" onchange="atualizarQtdVenda(${i}, this.value)" style="border:2px solid #e8d5f0;border-radius:8px;padding:8px;font-family:Nunito;font-size:0.85rem;"/>
+      </div>
+      <div class="form-group" style="margin:0">
+        <label style="font-size:0.72rem;color:var(--cinza);">Preço Unit.</label>
+        <input type="number" step="0.01" value="${item.precoUnitario}" onchange="atualizarPrecoVenda(${i}, this.value)" style="border:2px solid #e8d5f0;border-radius:8px;padding:8px;font-family:Nunito;font-size:0.85rem;"/>
+      </div>
+      <button class="btn-danger btn" style="padding:6px 10px;align-self:flex-end;border-radius:8px;" onclick="removerItemVenda(${i})">×</button>
+    </div>
+  `).join('');
+  atualizarTotalVenda();
+}
+function selecionarProdutoVenda(i, nome) {
+  const p = DB.get('produtos').find(x => x.nome === nome);
+  itensVenda[i].produtoNome = nome;
+  itensVenda[i].precoUnitario = p ? p.precoVenda : 0;
+  renderItensVenda();
+}
+function atualizarQtdVenda(i, v) { itensVenda[i].quantidade = parseInt(v)||1; atualizarTotalVenda(); }
+function atualizarPrecoVenda(i, v) { itensVenda[i].precoUnitario = parseFloat(v)||0; atualizarTotalVenda(); }
+function removerItemVenda(i) { itensVenda.splice(i, 1); renderItensVenda(); }
+function atualizarTotalVenda() {
+  const total = itensVenda.reduce((s, it) => s + (it.quantidade * it.precoUnitario), 0);
+  document.getElementById('v-total-display').textContent = fmt(total);
+  gerarParcelasDatas();
+}
+function toggleFiado() {
+  const pag = document.getElementById('v-pagamento').value;
+  document.getElementById('fiado-box').style.display = pag === 'fiado' ? 'block' : 'none';
+  if (pag === 'fiado') gerarParcelasDatas();
+}
+function gerarParcelasDatas() {
+  if (document.getElementById('v-pagamento').value !== 'fiado') return;
+  const n = parseInt(document.getElementById('v-parcelas').value)||1;
+  const dia = parseInt(document.getElementById('v-dia-venc').value)||10;
+  const total = itensVenda.reduce((s, it) => s + (it.quantidade * it.precoUnitario), 0);
+  const valParc = total / n;
+  const agora = new Date();
+  let html = '';
+  for (let i = 0; i < n; i++) {
+    let d = new Date(agora.getFullYear(), agora.getMonth() + i + (agora.getDate() >= dia ? 1 : 0), dia);
+    const ds = d.toISOString().split('T')[0];
+    html += `<div class="parcela-row"><span style="font-weight:700;color:var(--lilas)">${i+1}ª parcela</span><span>R$ ${fmt(valParc)} — <input type="date" id="pdata-${i}" value="${ds}" style="border:1px solid #ddd;border-radius:6px;padding:3px 6px;font-family:Nunito;font-size:0.82rem;"/></span></div>`;
+  }
+  document.getElementById('parcelas-datas').innerHTML = html;
+}
+function salvarVenda() {
+  const clienteNome = document.getElementById('v-cliente').value;
+  const data = document.getElementById('v-data').value;
+  const pagamento = document.getElementById('v-pagamento').value;
+  if (!clienteNome) { alert('Selecione um cliente!'); return; }
+  if (!data) { alert('Informe a data!'); return; }
+  if (!pagamento) { alert('Selecione a forma de pagamento!'); return; }
+  const itensValidos = itensVenda.filter(it => it.produtoNome && it.quantidade > 0);
+  if (!itensValidos.length) { alert('Adicione pelo menos um produto!'); return; }
+  const total = itensValidos.reduce((s, it) => s + (it.quantidade * it.precoUnitario), 0);
+  // baixar estoque
+  const produtos = DB.get('produtos');
+  for (const it of itensValidos) {
+    const idx = produtos.findIndex(p => p.nome === it.produtoNome);
+    if (idx >= 0) produtos[idx].quantidade = Math.max(0, produtos[idx].quantidade - it.quantidade);
+  }
+  DB.set('produtos', produtos);
+  // parcelas
+  let parcelas = null;
+  if (pagamento === 'fiado') {
+    const n = parseInt(document.getElementById('v-parcelas').value)||1;
+    const valParc = total / n;
+    parcelas = [];
+    for (let i = 0; i < n; i++) {
+      const dtEl = document.getElementById('pdata-' + i);
+      parcelas.push({ numero: i+1, valor: valParc, vencimento: dtEl ? dtEl.value : '', pago: false });
+    }
+  }
+  const venda = { id: Date.now(), clienteNome, data, pagamento, itens: itensValidos, total, parcelas, status: pagamento === 'fiado' ? 'fiado' : 'pago' };
+  const vendas = DB.get('vendas'); vendas.push(venda); DB.set('vendas', vendas);
+  fecharModal('modal-venda');
+  renderVendas();
+}
+function verParcelasVenda(id) {
+  const v = DB.get('vendas').find(x => x.id === id);
+  if (!v || !v.parcelas) return;
+  document.getElementById('mp-titulo').textContent = `Parcelas — ${v.clienteNome}`;
+  document.getElementById('mp-conteudo').innerHTML = v.parcelas.map((p, i) => {
+    const diff = diffDias(p.vencimento);
+    let badge = p.pago ? '<span class="badge badge-pago">✅ Pago</span>' : (diff < 0 ? '<span class="badge badge-atrasado">🔴 Atrasado</span>' : diff <= 3 ? '<span class="badge badge-avencer">🟡 Vence em breve</span>' : '<span class="badge badge-aberto">⏳ Em aberto</span>');
+    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f0e4f7;flex-wrap:wrap;gap:8px;">
+      <span><b>${p.numero}ª Parcela</b> — R$ ${fmt(p.valor)} — vence ${p.vencimento}</span>
+      <span style="display:flex;gap:8px;align-items:center;">${badge} ${!p.pago ? `<button class="btn-verde btn btn-sm" onclick="pagarParcela(${id},${i})">Marcar Pago</button>` : ''}</span>
+    </div>`;
+  }).join('');
+  abrirModal('modal-parcelas-venda');
+}
+function pagarParcela(vendaId, parcIdx) {
+  const vendas = DB.get('vendas');
+  const v = vendas.find(x => x.id === vendaId);
+  if (v && v.parcelas) { v.parcelas[parcIdx].pago = true; }
+  if (v && v.parcelas && v.parcelas.every(p => p.pago)) v.status = 'pago';
+  DB.set('vendas', vendas);
+  verParcelasVenda(vendaId);
+  renderVendas();
+}
+function excluirVenda(id) {
+  if (!confirm('Excluir esta venda?')) return;
+  const vendas = DB.get('vendas').filter(v => v.id !== id); DB.set('vendas', vendas); renderVendas();
+}
+function renderVendas() {
+  const vendas = DB.get('vendas').slice().reverse();
+  const tbody = document.getElementById('tbody-vendas');
+  if (!vendas.length) { tbody.innerHTML = '<tr><td colspan="7" class="vazio">Nenhuma venda registrada.</td></tr>'; return; }
+  const pgLabels = { dinheiro: '💵 Dinheiro', pix: '📱 Pix', cartao: '💳 Cartão', fiado: '🤝 Fiado' };
+  tbody.innerHTML = vendas.map(v => {
+    const statusBadge = v.pagamento === 'fiado'
+      ? (v.status === 'pago' ? '<span class="badge badge-pago">Pago</span>' : '<span class="badge badge-fiado">Fiado</span>')
+      : '<span class="badge badge-vista">Pago</span>';
+    const prods = v.itens.map(it => `${it.produtoNome} (${it.quantidade}x)`).join(', ');
+    return `<tr>
+      <td>${v.data}</td><td><b>${v.clienteNome}</b></td>
+      <td style="font-size:0.8rem;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${prods}">${prods}</td>
+      <td><b>R$ ${fmt(v.total)}</b></td>
+      <td>${pgLabels[v.pagamento]||v.pagamento}</td>
+      <td>${statusBadge}</td>
+      <td style="white-space:nowrap">
+        ${v.parcelas ? `<button class="btn-verde btn btn-sm" onclick="verParcelasVenda(${v.id})">💳 Parcelas</button> ` : ''}
+        <button class="btn-danger btn btn-sm" onclick="excluirVenda(${v.id})">🗑️</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// ── BOLETOS ──────────────────────────────────────────────────────────────────
+function abrirModalBoleto() {
+  ['b-forn','b-total','b-vparc','b-obs'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('b-parc').value = 1;
+  document.getElementById('b-venc').value = '';
+  abrirModal('modal-boleto');
+}
+function calcBoleto() {
+  const t = parseFloat(document.getElementById('b-total').value)||0;
+  const n = parseInt(document.getElementById('b-parc').value)||1;
+  document.getElementById('b-vparc').value = n > 0 ? fmt(t/n) : '';
+}
+function salvarBoleto() {
+  const forn = document.getElementById('b-forn').value.trim();
+  const total = parseFloat(document.getElementById('b-total').value)||0;
+  const venc = document.getElementById('b-venc').value;
+  if (!forn || !total || !venc) { alert('Preencha Fornecedor, Valor e Vencimento!'); return; }
+  const parc = parseInt(document.getElementById('b-parc').value)||1;
+  const b = { id: Date.now(), fornecedor: forn, total, parcelas: parc, vencimento: venc, obs: document.getElementById('b-obs').value.trim(), status: 'aberto' };
+  const lista = DB.get('boletos'); lista.push(b); DB.set('boletos', lista);
+  fecharModal('modal-boleto'); renderBoletos();
+}
+function pagarBoleto(id) {
+  const lista = DB.get('boletos'); const b = lista.find(x => x.id === id);
+  if (b) b.status = 'pago'; DB.set('boletos', lista); renderBoletos();
+}
+function excluirBoleto(id) {
+  if (!confirm('Excluir boleto?')) return;
+  DB.set('boletos', DB.get('boletos').filter(b => b.id !== id)); renderBoletos();
+}
+function statusBoleto(b) {
+  if (b.status === 'pago') return '<span class="badge badge-pago">✅ Pago</span>';
+  const diff = diffDias(b.vencimento);
+  if (diff < 0) return '<span class="badge badge-atrasado">🔴 Atrasado</span>';
+  if (diff <= 3) return '<span class="badge badge-avencer">🟡 Vence em breve</span>';
+  if (diff <= 7) return '<span class="badge badge-aberto">🟠 A vencer</span>';
+  return '<span class="badge badge-vista">🟢 Em dia</span>';
+}
+function renderBoletos() {
+  const lista = DB.get('boletos');
+  const tbody = document.getElementById('tbody-boletos');
+  if (!lista.length) { tbody.innerHTML = '<tr><td colspan="7" class="vazio">Nenhum boleto cadastrado.</td></tr>'; return; }
+  tbody.innerHTML = lista.slice().reverse().map(b => `<tr>
+    <td><b>${b.fornecedor}</b>${b.obs ? `<br><small style="color:var(--cinza)">${b.obs}</small>` : ''}</td>
+    <td>R$ ${fmt(b.total)}</td>
+    <td>${b.parcelas}x</td>
+    <td>R$ ${fmt(b.total/b.parcelas)}</td>
+    <td>${b.vencimento}</td>
+    <td>${statusBoleto(b)}</td>
+    <td style="white-space:nowrap">
+      ${b.status !== 'pago' ? `<button class="btn-verde btn btn-sm" onclick="pagarBoleto(${b.id})">✅ Pagar</button> ` : ''}
+      <button class="btn-danger btn btn-sm" onclick="excluirBoleto(${b.id})">🗑️</button>
+    </td>
+  </tr>`).join('');
+}
+
+// ── PEDIDOS ──────────────────────────────────────────────────────────────────
+function abrirModalPedido() {
+  ['ped-num','ped-forn','ped-total','ped-vparc','ped-obs'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('ped-parc').value = 1;
+  document.getElementById('ped-data').value = hoje();
+  document.getElementById('ped-cliente').innerHTML = '<option value="">Nenhum / Pedido próprio</option>';
+  DB.get('clientes').forEach(c => {
+    const o = document.createElement('option'); o.value = c.nome; o.textContent = c.nome;
+    document.getElementById('ped-cliente').appendChild(o);
+  });
+  abrirModal('modal-pedido');
+}
+function calcPedido() {
+  const t = parseFloat(document.getElementById('ped-total').value)||0;
+  const n = parseInt(document.getElementById('ped-parc').value)||1;
+  document.getElementById('ped-vparc').value = n > 0 ? fmt(t/n) : '';
+}
+function salvarPedido() {
+  const forn = document.getElementById('ped-forn').value.trim();
+  const total = parseFloat(document.getElementById('ped-total').value)||0;
+  if (!forn || !total) { alert('Preencha Fornecedor e Valor!'); return; }
+  const p = { id: Date.now(), numero: document.getElementById('ped-num').value.trim(), fornecedor: forn, clienteNome: document.getElementById('ped-cliente').value, data: document.getElementById('ped-data').value, total, parcelas: parseInt(document.getElementById('ped-parc').value)||1, obs: document.getElementById('ped-obs').value.trim(), status: 'pendente' };
+  const lista = DB.get('pedidos'); lista.push(p); DB.set('pedidos', lista);
+  fecharModal('modal-pedido'); renderPedidos();
+}
+function marcarPedidoPago(id) {
+  const lista = DB.get('pedidos'); const p = lista.find(x => x.id === id);
+  if (p) p.status = 'pago'; DB.set('pedidos', lista); renderPedidos();
+}
+function excluirPedido(id) {
+  if (!confirm('Excluir pedido?')) return;
+  DB.set('pedidos', DB.get('pedidos').filter(p => p.id !== id)); renderPedidos();
+}
+function renderPedidos() {
+  const lista = DB.get('pedidos');
+  const tbody = document.getElementById('tbody-pedidos');
+  if (!lista.length) { tbody.innerHTML = '<tr><td colspan="9" class="vazio">Nenhum pedido cadastrado.</td></tr>'; return; }
+  tbody.innerHTML = lista.slice().reverse().map(p => `<tr>
+    <td>${p.numero||'-'}</td>
+    <td><b>${p.fornecedor}</b></td>
+    <td>${p.clienteNome||'-'}</td>
+    <td>${p.data}</td>
+    <td>R$ ${fmt(p.total)}</td>
+    <td>${p.parcelas}x</td>
+    <td>R$ ${fmt(p.total/p.parcelas)}</td>
+    <td><span class="pedido-status ${p.status === 'pago' ? 'pedido-pago' : 'pedido-pendente'}">${p.status === 'pago' ? '✅ Pago' : '⏳ Pendente'}</span></td>
+    <td style="white-space:nowrap">
+      ${p.status !== 'pago' ? `<button class="btn-verde btn btn-sm" onclick="marcarPedidoPago(${p.id})">✅</button> ` : ''}
+      <button class="btn-danger btn btn-sm" onclick="excluirPedido(${p.id})">🗑️</button>
+    </td>
+  </tr>`).join('');
+}
+
+// ── DASHBOARD ────────────────────────────────────────────────────────────────
+function renderDashboard() {
+  const vendas = DB.get('vendas');
+  const boletos = DB.get('boletos');
+  const clientes = DB.get('clientes');
+  const produtos = DB.get('produtos');
+
+  const totalVendas = vendas.reduce((s, v) => s + v.total, 0);
+  const totalReceber = vendas.filter(v => v.parcelas).reduce((s, v) => s + v.parcelas.filter(p => !p.pago).reduce((ss, p) => ss + p.valor, 0), 0);
+  const totalBoletos = boletos.filter(b => b.status !== 'pago').reduce((s, b) => s + b.total, 0);
+  const prodEstBaixo = produtos.filter(p => p.quantidade < 3).length;
+
+  document.getElementById('dash-stats').innerHTML = `
+    <div class="stat-card"><div class="stat-label">Total de Vendas</div><div class="stat-value">R$ ${fmt(totalVendas)}</div><div class="stat-sub">${vendas.length} venda(s)</div></div>
+    <div class="stat-card amarelo"><div class="stat-label">A Receber (Fiado)</div><div class="stat-value">R$ ${fmt(totalReceber)}</div><div class="stat-sub">Parcelas em aberto</div></div>
+    <div class="stat-card vermelho"><div class="stat-label">Boletos a Pagar</div><div class="stat-value">R$ ${fmt(totalBoletos)}</div><div class="stat-sub">${boletos.filter(b=>b.status!=='pago').length} boleto(s)</div></div>
+    <div class="stat-card verde"><div class="stat-label">Clientes</div><div class="stat-value">${clientes.length}</div><div class="stat-sub">Cadastrados</div></div>
+    <div class="stat-card lilas"><div class="stat-label">Produtos</div><div class="stat-value">${produtos.length}</div><div class="stat-sub">${prodEstBaixo > 0 ? `⚠️ ${prodEstBaixo} com estoque baixo` : 'Estoque OK'}</div></div>
+  `;
+
+  // alertas vendas
+  const alertasV = [];
+  vendas.forEach(v => {
+    if (!v.parcelas) return;
+    v.parcelas.forEach(p => {
+      if (p.pago) return;
+      const diff = diffDias(p.vencimento);
+      if (diff <= 7) alertasV.push({ cliente: v.clienteNome, valor: p.valor, diff, vencimento: p.vencimento, parcela: p.numero });
+    });
+  });
+  alertasV.sort((a, b) => a.diff - b.diff);
+  const elAV = document.getElementById('dash-alertas-vendas');
+  if (!alertasV.length) { elAV.innerHTML = '<div class="sem-alerta">Sem cobranças nos próximos 7 dias 🎉</div>'; }
+  else {
+    elAV.innerHTML = alertasV.map(a => {
+      let cls, icon, msg;
+      if (a.diff < 0) { cls='verm'; icon='🔴'; msg=`Atrasado há ${Math.abs(a.diff)} dia(s)`; }
+      else if (a.diff === 0) { cls='verm'; icon='🔴'; msg='Vence HOJE!'; }
+      else if (a.diff === 1) { cls='amar'; icon='🟡'; msg='Vence AMANHÃ'; }
+      else { cls='azul'; icon='🔵'; msg=`Vence em ${a.diff} dias (${a.vencimento})`; }
+      return `<div class="alerta ${cls}"><span class="alerta-icon">${icon}</span><div class="alerta-info"><div class="alerta-cliente">${a.cliente} — ${a.parcela}ª parcela</div><div class="alerta-detalhe">R$ ${fmt(a.valor)} — ${msg}</div></div></div>`;
+    }).join('');
+  }
+
+  // alertas boletos
+  const alertasB = boletos.filter(b => b.status !== 'pago').map(b => ({ ...b, diff: diffDias(b.vencimento) })).filter(b => b.diff <= 7).sort((a,b) => a.diff - b.diff);
+  const elAB = document.getElementById('dash-alertas-boletos');
+  if (!alertasB.length) { elAB.innerHTML = '<div class="sem-alerta">Sem boletos vencendo em breve 🎉</div>'; }
+  else {
+    elAB.innerHTML = alertasB.map(b => {
+      let cls, icon, msg;
+      if (b.diff < 0) { cls='verm'; icon='🔴'; msg=`Atrasado há ${Math.abs(b.diff)} dia(s)`; }
+      else if (b.diff === 0) { cls='verm'; icon='🔴'; msg='Vence HOJE!'; }
+      else if (b.diff === 1) { cls='amar'; icon='🟡'; msg='Vence AMANHÃ'; }
+      else { cls='azul'; icon='🔵'; msg=`Vence em ${b.diff} dias`; }
+      return `<div class="alerta ${cls}"><span class="alerta-icon">${icon}</span><div class="alerta-info"><div class="alerta-cliente">${b.fornecedor}</div><div class="alerta-detalhe">R$ ${fmt(b.total)} — ${msg}</div></div></div>`;
+    }).join('');
+  }
+
+  // estoque baixo
+  const baixo = produtos.filter(p => p.quantidade < 3);
+  const elEB = document.getElementById('dash-estoque-baixo');
+  if (!baixo.length) { elEB.innerHTML = '<div class="sem-alerta">Todos os produtos com estoque OK 👍</div>'; }
+  else {
+    elEB.innerHTML = `<div style="display:flex;flex-wrap:wrap;gap:8px;">${baixo.map(p => `<span class="estoque-baixo">⚠️ ${p.nome} (${p.quantidade} un.)</span>`).join('')}</div>`;
+  }
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+renderDashboard();
+</script>
+</body>
+</html>
